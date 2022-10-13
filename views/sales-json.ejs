@@ -1,0 +1,31 @@
+<%- include('parts/head.ejs') %>
+<%- include('parts/navbar.ejs') %>
+        <div class="container">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">姓名</th>
+                        <th scope="col">年齡</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(item of sales){ %>
+                        <tr>
+                            <td>
+                                <%= item.id %>
+                            </td>
+                            <td>
+                                <%= item.name %>
+                            </td>
+                            <td>
+                                <%= item.age %>
+                            </td>
+                        </tr>
+                        <% } %>
+                </tbody>
+
+            </table>
+        </div>
+<%- include('parts/script.ejs') %>
+<%- include('parts/foot.ejs') %>
