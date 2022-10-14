@@ -65,7 +65,7 @@
         let photoData = [];
 
         const item_tpl_func = ({ filename }) => `
-        <div class="photo" data-id="${filename}">
+        <div class="photo" draggable="true" data-id="${filename}">
             <img src="/uploads/${filename}" alt="" >
             <span class="remove" onclick="removeItem(event)">
                 <i class="fa-solid fa-circle-xmark"></i>

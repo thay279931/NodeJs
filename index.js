@@ -1,17 +1,26 @@
 require('dotenv').config();
 const express = require('express');
-
+const session= require('express-session');
 // const multer = require('multer');
 // const upload = multer({ dest: 'tmp_uploads/' });
 const upload = require(__dirname + '/modules/upload-img');
 const fs = require('fs').promises;
 const app = express();
 
+
 // app.get('/a.html', (req, res) => {
 //     res.send(`<h2>假的</h2>`);
 // });
 
 app.set('view engine', 'ejs');
+
+// top-level middleware
+app.use(session({
+    saveUninitialized: false,
+    resave: false,
+    secret: "thghtyhnyjscjuju",
+    cookie:{}
+}));
 // routes
 app.use(express.static('public'));
 app.use(express.static('node_modules/bootstrap/dist'));
@@ -94,6 +103,24 @@ app.get(/^\/m\/09\d{2}\-?\d{3}\-?\d{3}$/, (req, res)=>{
         })
 
 app.use('/admin2',  require(__dirname + '/routes/admin2') );
+
+const myMiddle = (req, res, next)=>{
+    res.locals = {...res.locals, ethen:'哈囉'};
+    res.locals.derrrr = 123;
+    // res.myPersonal = {...res.locals, shinder:'哈囉'}; // 不建議
+    next();
+};
+
+app.get('/try-middle', [myMiddle],  (req, res)=>{
+    res.json(res.locals);
+});
+
+app.get('/try-session', (req, res)=>{
+    req.session.aaa ||= 0; // 預設值 
+    req.session.aaa++;
+    res.json(req.session);
+});
+
 app.use((req, res) => {
     // res.type('text/plain'); // 純文字
     // res.status(404).send('<p>找不到你要的頁面</p>')
