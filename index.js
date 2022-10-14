@@ -1,8 +1,10 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
+const MysqlStore = require('express-mysql-session')(session);
 const moment = require('moment-timezone');
 const db = require(__dirname + '/modules/db_connect2');
+const sessionStore = new MysqlStore({}, db);
 // const multer = require('multer');
 // const upload = multer({ dest: 'tmp_uploads/' });
 const upload = require(__dirname + '/modules/upload-img');
@@ -21,6 +23,7 @@ app.use(session({
     saveUninitialized: false,
     resave: false,
     secret: "thghtyhnyjscjuju",
+    store: sessionStore,
     cookie: {
         maxAge: 1200000,
     }
