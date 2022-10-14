@@ -156,6 +156,18 @@ app.get('/try-db', async (req, res) => {
     res.json(rows);
 });
 
+app.get('/try-db-add', async (req, res) => {
+    const name='Ethen';
+    const email = 'link@gmail.com';
+    const mobile = '0918555666';
+    const birthday = '1998-10-27';
+    const address = '宜蘭縣';
+    const sql = "INSERT INTO `address_book`(`name`, `email`, `mobile`, `birthday`, `address`, `created_at`) VALUES (?, ?, ?, ?, ?, NOW())";
+    
+    const [result] = await db.query(sql,[name,email,mobile,birthday,address]);
+    res.json(result);
+});
+
 app.use((req, res) => {
     // res.type('text/plain'); // 純文字
     // res.status(404).send('<p>找不到你要的頁面</p>')
