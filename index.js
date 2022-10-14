@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
-const session= require('express-session');
+const session = require('express-session');
+const moment = require('moment-timezone');
 // const multer = require('multer');
 // const upload = multer({ dest: 'tmp_uploads/' });
 const upload = require(__dirname + '/modules/upload-img');
@@ -19,7 +20,9 @@ app.use(session({
     saveUninitialized: false,
     resave: false,
     secret: "thghtyhnyjscjuju",
-    cookie:{}
+    cookie: {
+        maxAge: 1200000,
+    }
 }));
 // routes
 app.use(express.static('public'));
@@ -63,10 +66,10 @@ app.post('/try-post-form', (req, res) => {
 });
 
 app.post('/try-upload', upload.single('avatar'), async (req, res) => {
-       res.json(req.file);
+    res.json(req.file);
     // if (req.file && req.file.originalname) {
     //     await fs.rename(req.file.path, `public/imgs/${req.file.originalname}`);
-    
+
     // } else {
     //     res.json({msg:'沒有上傳檔案'});
     // }
@@ -74,51 +77,74 @@ app.post('/try-upload', upload.single('avatar'), async (req, res) => {
 
 app.post('/try-upload2', upload.array('photos'), async (req, res) => {
     res.json(req.files);
- // if (req.file && req.file.originalname) {
- //     await fs.rename(req.file.path, `public/imgs/${req.file.originalname}`);
- 
- // } else {
- //     res.json({msg:'沒有上傳檔案'});
- // }
+    // if (req.file && req.file.originalname) {
+    //     await fs.rename(req.file.path, `public/imgs/${req.file.originalname}`);
+
+    // } else {
+    //     res.json({msg:'沒有上傳檔案'});
+    // }
 });
 
-app.get('/my-params1/:action/:id', (req, res)=>{
+app.get('/my-params1/:action/:id', (req, res) => {
     res.json(req.params);
-    });
+});
 
-app.get('/my-params2/:action?/:id?', (req, res)=>{
-        res.json(req.params);
-        });
+app.get('/my-params2/:action?/:id?', (req, res) => {
+    res.json(req.params);
+});
 
-app.get('/my-params3/*/*?', (req, res)=>{
-        res.json(req.params);
-        });
+app.get('/my-params3/*/*?', (req, res) => {
+    res.json(req.params);
+});
 
-app.get(/^\/m\/09\d{2}\-?\d{3}\-?\d{3}$/, (req, res)=>{
-        let u = req.url.slice(3);
-        u = u.split('?')[0];
-        
-        u = u.split('-').join('');
-        res.send({mobile:u});
-        })
+app.get(/^\/m\/09\d{2}\-?\d{3}\-?\d{3}$/, (req, res) => {
+    let u = req.url.slice(3);
+    u = u.split('?')[0];
 
-app.use('/admin2',  require(__dirname + '/routes/admin2') );
+    u = u.split('-').join('');
+    res.send({ mobile: u });
+})
 
-const myMiddle = (req, res, next)=>{
-    res.locals = {...res.locals, ethen:'哈囉'};
+app.use('/admin2', require(__dirname + '/routes/admin2'));
+
+const myMiddle = (req, res, next) => {
+    res.locals = { ...res.locals, ethen: '哈囉' };
     res.locals.derrrr = 123;
     // res.myPersonal = {...res.locals, shinder:'哈囉'}; // 不建議
     next();
 };
 
-app.get('/try-middle', [myMiddle],  (req, res)=>{
+app.get('/try-middle', [myMiddle], (req, res) => {
     res.json(res.locals);
 });
 
-app.get('/try-session', (req, res)=>{
+app.get('/try-session', (req, res) => {
     req.session.aaa ||= 0; // 預設值 
     req.session.aaa++;
     res.json(req.session);
+});
+
+app.get('/try-date', (req, res) => {
+    const now = new Date();
+    const m = moment();
+
+    res.send({
+        t1: now,
+        t2: now.toString(),
+        t3: now.toDateString(),
+        t4: now.toLocaleString(),
+        m: m.format('YYYY-MM-DD HH:mm:ss'),
+    })
+});
+
+app.get('/try-moment', (req, res) => {
+    const fm = 'YYYY-MM-DD HH:mm:ss';
+    const m = moment('06/10/22', 'DD/MM/YY');
+    res.json({
+        m,
+        m1: m.format(fm),
+        m2: m.tz('Europe/London').format(fm)
+    });
 });
 
 app.use((req, res) => {
