@@ -15,6 +15,15 @@ router.get(['/', '/list'], async (req, res)=>{
     if(page<1){
         return res.redirect(req.baseUrl);
     }
+    let search = req.query.search ? req.query.search.trim() : '';
+    let where = ` WHERE 1 `;
+    if(search) {
+        where += ` AND \`name\` LIKE ${db.escape('%'+search+'%')} `;
+    }
+    res.type('text/plain; charset=utf-8');
+    return res.end(where);
+
+
     const t_sql = "SELECT COUNT(1) totalRows FROM address_book";
     const [[{totalRows}]] = await db.query(t_sql);
 
