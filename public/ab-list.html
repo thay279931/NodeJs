@@ -6,12 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.11.5/dayjs.min.js"
-        integrity="sha512-Ot7ArUEhJDU0cwoBNNnWe487kjL5wAOsIYig8llY/l0P2TUFwgsAHVmrZMHsT8NGo+HwkjTJsNErS6QqIkBxDw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Document</title>
 </head>
 
@@ -45,7 +40,7 @@
         const t_continer = document.querySelector('.table-container');
         const p_continer = document.querySelector('.pagi-container');
 
-        function renderPagi({ page, totalPages }) {
+        function renderPagi({page, totalPages}){
 
             return `
             <nav aria-label="Page navigation example">
@@ -55,16 +50,17 @@
                                 <i class="fa-solid fa-circle-arrow-left"></i>
                             </a>
                         </li>
-                        ${Array(11).fill(1).map((el, i) => {
-                const p = page - 5 + i;
-                if (p < 1 || p > totalPages) return '';
-                return `
-                                <li class="page-item ${p === page ? 'active' : ''}">
-                                    <a class="page-link" href="?page=${p}">${p}</a>
+                        ${
+                            Array(11).fill(1).map((el, i)=>{
+                                const p = page-5+i;
+                                if(p<1 || p>totalPages) return '';
+                                return `
+                                <li class="page-item ${ p===page ? 'active' : ''}">
+                                    <a class="page-link" href="javascript:gotoPage(${p})">${p}</a>
                                 </li>
                                 `
-            }).join('')
-                }
+                            }).join('')
+                        }
                         
 
 
@@ -77,7 +73,7 @@
             `;
         }
 
-        function renderTable({ rows }) {
+        function renderTable({rows}) {
             return `
             <table class="table table-striped table-bordered">
                     <thead>
@@ -91,18 +87,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        ${rows.map(el => {
-                return `
+                        ${ rows.map(el=>{
+                            return `
                             <tr>
                                 <td>${el.sid}</td>
                                 <td>${el.name}</td>
                                 <td>${el.mobile}</td>
                                 <td>${el.email}</td>
-                                <td>${dayjs(el.birthday).format('YYYY-MM-DD')}</td>
+                                <td>${ dayjs(el.birthday).format('YYYY-MM-DD') }</td>
                                 <td>${el.address}</td>
                             </tr>
                             `;
-            }).join('')}
+                        }).join('') }
                     </tbody>
 
                 </table>
@@ -110,33 +106,38 @@
         }
 
         const search = location.search;
-        fetch('/ab/api' + search)
-            .then(r => r.json())
-            .then(result => {
-                console.log(result);
-                p_continer.innerHTML = renderPagi(result);
-                t_continer.innerHTML = renderTable(result);
-            })
+        fetch('/ab/api'+search)
+        .then(r=>r.json())
+        .then(result=>{
+            console.log(result);
+            p_continer.innerHTML = renderPagi(result);
+            t_continer.innerHTML = renderTable(result);
+        })
+        
+        async function getData(){
+            let usp = new URLSearchParams(location.search);
 
+            const r = await fetch('/ab/api?'+usp.toString());
+            const result = await r.json();
+            console.log(result);
+            p_continer.innerHTML = renderPagi(result);
+            t_continer.innerHTML = renderTable(result);
+        }
 
-        function doSearch(event) {
+        function doSearch(event){
             event.preventDefault(); // 不讓表單送出
             const f = event.currentTarget;
+            const usp = new URLSearchParams({search: f.search.value});
+            history.pushState('','', '?'+usp.toString());
+            getData();
+        }
 
-            console.log({ search: f.search.value });
+        function gotoPage(p){
+            const usp = new URLSearchParams(location.search);
+            usp.set('page', p);
 
-            const usp = new URLSearchParams({ search: f.search.value });
-
-            history.pushState('', '', '?' + usp.toString());
-            console.log(location.search);
-
-            fetch('/ab/api' + location.search)
-                .then(r => r.json())
-                .then(result => {
-                    console.log(result);
-                    p_continer.innerHTML = renderPagi(result);
-                    t_continer.innerHTML = renderTable(result);
-                })
+            history.pushState('','', '?'+usp.toString());
+            getData();
         }
     </script>
 </body>
