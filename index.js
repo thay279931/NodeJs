@@ -35,6 +35,14 @@ app.use(express.static('node_modules/bootstrap/dist'));
 // top-level middleware
 app.use(express.urlencoded({ extended: false }));
 
+app.use((req, res, next)=>{
+    // 自己定義的 template helper functions
+    res.locals.toDateString = (d)=> moment(d).format('YYYY-MM-DD');
+    res.locals.toDatetimeString = (d)=> moment(d).format('YYYY-MM-DD  HH:mm:ss');
+
+    next();
+});
+
 app.get('/', (req, res) => {
     // res.send(`<h2>泥好</h2>`);
     res.render('main', { NAME: 'ethen' });

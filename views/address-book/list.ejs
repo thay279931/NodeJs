@@ -1,6 +1,31 @@
 <%- include('./../parts/head') %>
-<%- include('./../parts/navbar') %>
+    <%- include('./../parts/navbar') %>
         <div class="container">
+            <div class="row">
+                <div class="col">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <i class="fa-solid fa-circle-arrow-left"></i>
+                                </a>
+                            </li>
+                            <% for(let i=page-5; i<=page+5; i++)
+                                if(i>=1 && i<=totalPages) {
+                                %>
+                            <li class="page-item">
+                                <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                            </li>
+                            <% } %>
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    <i class="fa-solid fa-circle-arrow-right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="col">
                     <table class="table table-striped table-bordered">
@@ -9,7 +34,7 @@
                                 <th scope="col">#</th>
                                 <th scope="col">姓名</th>
                                 <th scope="col">手機</th>
-                                <th scope="col">E-mail</th>
+                                <th scope="col">Email</th>
                                 <th scope="col">生日</th>
                                 <th scope="col">地址</th>
                             </tr>
@@ -30,7 +55,7 @@
                                         <%= r.email %>
                                     </td>
                                     <td>
-                                        <%= r.birthday %>
+                                        <%= toDateString(r.birthday) %>
                                     </td>
                                     <td>
                                         <%= r.address %>
@@ -38,9 +63,11 @@
                                 </tr>
                                 <% } %>
                         </tbody>
+
                     </table>
                 </div>
             </div>
+
         </div>
-<%- include('./../parts/script') %>
-<%- include('./../parts/foot') %>
+        <%- include('./../parts/script') %>
+            <%- include('./../parts/foot') %>
