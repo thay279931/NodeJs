@@ -5,6 +5,7 @@ const MysqlStore = require('express-mysql-session')(session);
 const moment = require('moment-timezone');
 const db = require(__dirname + '/modules/db_connect2');
 const sessionStore = new MysqlStore({}, db);
+const cors = require('cors');
 // const multer = require('multer');
 // const upload = multer({ dest: 'tmp_uploads/' });
 const upload = require(__dirname + '/modules/upload-img');
@@ -18,6 +19,7 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
+app.use(cors());
 // top-level middleware
 app.use(session({
     saveUninitialized: false,
@@ -35,10 +37,10 @@ app.use(express.static('node_modules/bootstrap/dist'));
 // top-level middleware
 app.use(express.urlencoded({ extended: false }));
 
-app.use((req, res, next)=>{
+app.use((req, res, next) => {
     // 自己定義的 template helper functions
-    res.locals.toDateString = (d)=> moment(d).format('YYYY-MM-DD');
-    res.locals.toDatetimeString = (d)=> moment(d).format('YYYY-MM-DD  HH:mm:ss');
+    res.locals.toDateString = (d) => moment(d).format('YYYY-MM-DD');
+    res.locals.toDatetimeString = (d) => moment(d).format('YYYY-MM-DD  HH:mm:ss');
 
     next();
 });
@@ -165,30 +167,30 @@ app.get('/try-db', async (req, res) => {
 });
 
 app.get('/try-db-add', async (req, res) => {
-    const name='Ethen';
+    const name = 'Ethen';
     const email = 'link@gmail.com';
     const mobile = '0918555666';
     const birthday = '1998-10-27';
     const address = '宜蘭縣';
     const sql = "INSERT INTO `address_book`(`name`, `email`, `mobile`, `birthday`, `address`, `created_at`) VALUES (?, ?, ?, ?, ?, NOW())";
-    
-    const [result] = await db.query(sql,[name,email,mobile,birthday,address]);
+
+    const [result] = await db.query(sql, [name, email, mobile, birthday, address]);
     res.json(result);
 });
 
 app.get('/try-db-add2', async (req, res) => {
-    const name='Ethen';
+    const name = 'Ethen';
     const email = 'link@gmail.com';
     const mobile = '0918555666';
     const birthday = '1998-10-27';
     const address = '宜蘭縣';
     const sql = "INSERT INTO `address_book` SET ?";
-    
-    const [result] = await db.query(sql,[{name,email,mobile,birthday,address,created_at:new Date()}]);
+
+    const [result] = await db.query(sql, [{ name, email, mobile, birthday, address, created_at: new Date() }]);
     res.json(result);
 });
 
-app.use('/ab',  require(__dirname + '/routes/address-book') );
+app.use('/ab', require(__dirname + '/routes/address-book'));
 
 app.use((req, res) => {
     // res.type('text/plain'); // 純文字

@@ -17,6 +17,7 @@
   "dependencies": {
     "awesome": "^0.0.7",
     "bootstrap": "^5.2.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.8",
     "express": "^4.18.1",
