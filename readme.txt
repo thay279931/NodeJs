@@ -26,3 +26,11 @@ url
 /product/12
 
 /:cateId/:productId
+
+----------
+fetch()
+    GET: urlencoded (query string)
+        來源: Form, Object
+
+    POST: json, urlencoded, multipart
+        來源: Form, Object
