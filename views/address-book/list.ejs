@@ -55,7 +55,7 @@
                             <% for(let r of rows){ %>
                                 <tr>
                                     <td>
-                                        <a href="#">
+                                        <a href="javascript: delItem(<%= r.sid %>)">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </a>
                                     </td>
@@ -92,4 +92,17 @@
 
         </div>
         <%- include('./../parts/script') %>
+        <script>
+            function delItem(sid){
+                fetch('/ab/del/'+sid, {
+                    method: 'DELETE'
+                }).then(r=>r.json())
+                .then(result=>{
+                    console.log(JSON.stringify(result));
+                    location.reload();
+                })
+
+            }
+            
+            </script>
             <%- include('./../parts/foot') %>

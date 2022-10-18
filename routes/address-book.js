@@ -114,7 +114,12 @@ router.put('/edit/:sid', async (req, res)=>{
 
 });
 
-
+router.delete('/del/:sid', async (req, res)=>{
+    const sql = " DELETE FROM address_book WHERE sid=?";
+    const [result] = await db.query(sql, [req.params.sid]);
+    
+    res.json({success: !!result.affectedRows });
+});
 
 //
 router.get('/item/:id', async (req, res)=>{
