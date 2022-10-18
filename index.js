@@ -28,7 +28,7 @@ const corsOptions = {
     }
 };
 
-
+app.use(cors(corsOptions));
 // top-level middleware
 app.use(session({
     saveUninitialized: false,
