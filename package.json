@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "awesome": "^0.0.7",
+    "axios": "^1.1.3",
     "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.2.2",

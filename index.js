@@ -6,6 +6,7 @@ const moment = require('moment-timezone');
 const db = require(__dirname + '/modules/db_connect2');
 const sessionStore = new MysqlStore({}, db);
 const cors = require('cors');
+const axios = require('axios');
 // const multer = require('multer');
 // const upload = multer({ dest: 'tmp_uploads/' });
 const upload = require(__dirname + '/modules/upload-img');
@@ -51,6 +52,7 @@ app.use((req, res, next) => {
     res.locals.toDateString = (d) => moment(d).format('YYYY-MM-DD');
     res.locals.toDatetimeString = (d) => moment(d).format('YYYY-MM-DD  HH:mm:ss');
     res.locals.title = 'Ethen的網站';
+    res.locals.session = req.session;
     next();
 });
 
@@ -200,6 +202,25 @@ app.get('/try-db-add2', async (req, res) => {
 });
 
 app.use('/ab', require(__dirname + '/routes/address-book'));
+
+app.get('/fake-login',(req,res)=>{
+req.session.admin={
+id:12,
+account:'ethen',
+nickname:'阿兵'
+};
+res.redirect('/');
+});
+
+app.get('/logout',(req,res)=>{
+    delete req.session.admin
+    res.redirect('/')
+    });
+
+    app.get('/yahoo', async (req, res)=>{
+        const response = await axios.get('https://tw.yahoo.com/');
+        res.send(response.data);
+    });
 
 app.use((req, res) => {
     // res.type('text/plain'); // 純文字
