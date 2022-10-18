@@ -19,7 +19,6 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
-// top-level middleware
 const corsOptions = {
     credentials: true,
     origin: function (origin, callback) {
@@ -29,6 +28,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
 // top-level middleware
 app.use(session({
     saveUninitialized: false,

@@ -11,13 +11,14 @@
 
     <script>
         fetch('//localhost:3001/try-session',{
-           credentials: "include"
+            credentials: "include"
         })
-        .then(r=>r.json())
-        .then(result=>{
-            info.innerText=JSON.stringify(result, null, 4);
-        });
+            .then(r=>r.json())
+            .then(result=>{
+                info.innerText = JSON.stringify(result, null, 4);
+            });
 
     </script>
+
 </body>
 </html>
