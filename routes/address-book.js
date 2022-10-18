@@ -1,19 +1,18 @@
 const express = require('express');
 const router = express.Router();
 const db = require(__dirname + '/../modules/db_connect2');
+const upload = require(__dirname + '/../modules/upload-img');
 
 
 router.use((req, res, next)=>{
     next();
 });
 
-// CRUD
-
-async function getListData(req,res){
+async function getListData(req, res){
     const perPage = 20;
     let page = +req.query.page || 1;
     if(page<1){
-        return res.redirect(req.baseUrl);// api 時不應該轉向
+        return res.redirect(req.baseUrl); // api 時不應該轉向
     }
 
     let search = req.query.search ? req.query.search.trim() : '';
@@ -45,13 +44,12 @@ async function getListData(req,res){
 
 // CRUD
 
-
 // 新增資料
 router.get('/add', async (req, res)=>{
     res.render('address-book/add')
 });
-router.post('/add', async (req, res)=>{
-    
+router.post('/add', upload.none(), async (req, res)=>{
+    res.json(req.body);
 });
 
 
@@ -60,13 +58,13 @@ router.get('/item/:id', async (req, res)=>{
 });
 
 router.get(['/', '/list'], async (req, res)=>{
-    const data = await getListData(req,res);
+    const data = await getListData(req, res);
 
     res.render('address-book/list', data);
 });
 
 router.get(['/api', '/api/list'], async (req, res)=>{
-    res.json(await getListData(req,res));
+    res.json(await getListData(req, res));
 });
 
 module.exports = router;
