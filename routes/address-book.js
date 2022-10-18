@@ -87,7 +87,31 @@ router.get('/edit/:sid', async (req, res)=>{
     res.render('address-book/edit', rows[0]);
 });
 router.put('/edit/:sid', async (req, res)=>{
-    res.json(req.body);
+    const output = {
+        success: false,
+        code: 0,
+        error: {},
+        postData: req.body, // 除錯用
+    };
+
+    // TODO: 檢查欄位的格式, 可以用 joi
+
+    const sql = "UPDATE `address_book` SET `name`=?,`email`=?,`mobile`=?,`birthday`=?,`address`=? WHERE `sid`=?";
+
+    const [result] = await db.query(sql, [
+        req.body.name,
+        req.body.email,
+        req.body.mobile,
+        req.body.birthday || null,
+        req.body.address,
+        req.params.sid
+    ]);
+    // console.log(result);
+    // if(result.affectedRows) output.success = true;
+    if(result.changedRows) output.success = true;
+
+    res.json(output);
+
 });
 
 
