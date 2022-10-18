@@ -83,12 +83,11 @@ router.get('/edit/:sid', async (req, res)=>{
     if(!rows || !rows.length){
         return res.redirect(req.baseUrl); // 跳轉到列表頁
     }
-    res.json(rows[0]);
-    //res.render('address-book/edit')
+    //res.json(rows[0]);
+    res.render('address-book/edit', rows[0]);
 });
 router.put('/edit/:sid', async (req, res)=>{
-
-    // res.render('address-book/edit')
+    res.json(req.body);
 });
 
 
