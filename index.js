@@ -19,7 +19,16 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
-app.use(cors());
+// top-level middleware
+const corsOptions = {
+    credentials: true,
+    origin: function (origin, callback) {
+        console.log({origin});
+        callback(null, true);
+    }
+};
+
+
 // top-level middleware
 app.use(session({
     saveUninitialized: false,
