@@ -242,6 +242,34 @@ app.get('/logout',(req,res)=>{
         res.json(rows);
     });
 
+    app.get('/cate2', async (req, res)=>{
+        const [rows] = await db.query("SELECT * FROM categories");
+    
+        const dict = {};
+        // 編輯字典
+        for(let i of rows){
+            dict[i.sid] = i;
+        }
+    
+        for(let i of rows){
+            if(i.parent_sid!=0){
+                const p = dict[i.parent_sid];
+                p.children ||= [];
+                p.children.push(i);
+            }
+        }
+    
+        // 把第一層拿出來
+        const firsts = [];
+        for(let i of rows){
+            if(i.parent_sid===0){
+                firsts.push(i);
+            }
+        }
+    
+        res.json(firsts);
+    });
+
 app.use((req, res) => {
     // res.type('text/plain'); // 純文字
     // res.status(404).send('<p>找不到你要的頁面</p>')
