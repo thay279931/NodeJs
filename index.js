@@ -222,6 +222,26 @@ app.get('/logout',(req,res)=>{
         res.send(response.data);
     });
 
+    app.get('/cate', async (req, res)=>{
+        const [rows] = await db.query("SELECT * FROM categories");
+        const firsts = [];
+        for(let i of rows){
+            if(i.parent_sid===0){
+                firsts.push(i);
+            }
+        }
+    
+        for(let f of firsts){
+            for(let i of rows){
+                if(f.sid===i.parent_sid){
+                    f.children ||= [];
+                    f.children.push(i)
+                }
+            }
+        }
+        res.json(rows);
+    });
+
 app.use((req, res) => {
     // res.type('text/plain'); // 純文字
     // res.status(404).send('<p>找不到你要的頁面</p>')
